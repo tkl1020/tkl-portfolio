@@ -25,12 +25,17 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build React app (warnings won't block)
+      - name: Build React app (ignore warnings)
         run: CI=false npm run build
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: tkl-portfolio  # <-- change if your Azure app name is different
+          app-name: tkl-portfolio  # <-- Make sure this matches your Azure App name exactly
           slot-name: Production
           package: ./build
